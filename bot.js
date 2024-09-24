@@ -1,7 +1,21 @@
+const express = require("express");
+const bodyParser = require("body-parser");
 const TelegramBot = require("node-telegram-bot-api");
 
+const app = express();
 const token = "7521542463:AAEDti3y-zujYBzko8bNRC7zI8q1BeILWRM";
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token);
+
+const PORT = process.env.PORT || 8443;
+const WEBHOOK_URL = `https://bot-theta-green.vercel.app/webhook`;
+
+bot.setWebHook(WEBHOOK_URL);
+
+app.use(bodyParser.json());
+app.post("/webhook", (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
 
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
@@ -25,6 +39,6 @@ bot.onText(/\/start/, (msg) => {
   );
 });
 
-bot.on("polling_error", (error) => {
-  console.error(`Polling error: ${error.code}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
