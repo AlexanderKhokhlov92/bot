@@ -1,22 +1,24 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const TelegramBot = require("node-telegram-bot-api");
 
 const app = express();
-const token = "7521542463:AAEDti3y-zujYBzko8bNRC7zI8q1BeILWRM";
+const token = "7521542463:AAEDti3y-zujYBzko8bNRC7zI8q1BeILWRM"; // Токен вашего бота
 const bot = new TelegramBot(token);
 
-const PORT = process.env.PORT || 8443;
-const WEBHOOK_URL = `https://bot-theta-green.vercel.app/webhook`;
-
+// Устанавливаем webhook URL
+const WEBHOOK_URL = "https://bot-theta-green.vercel.app/api/bot";
 bot.setWebHook(WEBHOOK_URL);
 
-app.use(bodyParser.json());
-app.post("/webhook", (req, res) => {
+// Middleware для обработки JSON
+app.use(express.json());
+
+// Обрабатываем вебхуки
+app.post("/api/bot", (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 });
 
+// Команда /start для тестирования
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const options = {
@@ -39,6 +41,4 @@ bot.onText(/\/start/, (msg) => {
   );
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app; // Экспортируем express приложение
