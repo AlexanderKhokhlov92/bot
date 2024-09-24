@@ -25,7 +25,7 @@ bot.onText(/\/start/, (msg) => {
         [
           {
             text: "Открыть магазин",
-            web_app: { url: "https://gameshop-pi-blush.vercel.app/" }, // Используем web_app
+            web_app: { url: "https://gameshop-pi-blush.vercel.app/" },
           },
         ],
       ],
